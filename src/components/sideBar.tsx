@@ -44,6 +44,11 @@ export function Sidebar() {
       href: "/whatsapp",
       icon: <BarChart2 className="h-5 w-5" />,
     },
+        {
+      name: "Faturamento",
+      href: "/faturamento",
+      icon: <BarChart2 className="h-5 w-5" />,
+    },
   ];
 
   const secondaryItems = [
