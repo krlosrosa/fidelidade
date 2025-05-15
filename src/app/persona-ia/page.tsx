@@ -149,7 +149,7 @@ export default function BusinessProfilePage() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="min-h-screen flex-1 bg-gray-50 p-6">
+      <div className="min-h-screen min-w-full flex-1 bg-gray-50 p-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
