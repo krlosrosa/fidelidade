@@ -525,7 +525,7 @@ export default function CustomerExperienceAutomation() {
                     <Switch
                       id="status"
                       checked={formData.status === 'active'}
-                      onCheckedChange={(checked: 'active' | 'inactive') =>
+                      onCheckedChange={(checked: any) =>
                         setFormData({
                           ...formData,
                           status: checked ? 'active' : 'inactive',
