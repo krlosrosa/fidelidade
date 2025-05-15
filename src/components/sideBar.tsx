@@ -30,8 +30,8 @@ export function Sidebar() {
       icon: <Users className="h-5 w-5" />,
     },
     {
-      name: "Programa de Fidelidade",
-      href: "/loyalty",
+      name: "Identidade da IA",
+      href: "/persona-ia",
       icon: <Gift className="h-5 w-5" />,
     },
     {
