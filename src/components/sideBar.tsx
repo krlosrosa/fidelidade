@@ -20,8 +20,8 @@ export function Sidebar() {
 
   const navItems = [
     {
-      name: "Dashboard",
-      href: "/dashboard",
+      name: "Agendamento",
+      href: "/agendamento",
       icon: <LayoutDashboard className="h-5 w-5" />,
     },
     {
