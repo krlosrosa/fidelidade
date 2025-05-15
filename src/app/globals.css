@@ -1,26 +1,133 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+
+  /* Cores baseadas na paleta fornecida */
+  --background: #f8f9fa; /* Tom claro de fundo */
+  --foreground: #654c4f; /* Cor principal do texto (roxo escuro) */
+  --card: #ffffff; /* Branco para cards */
+  --card-foreground: #654c4f;
+  --popover: #ffffff;
+  --popover-foreground: #654c4f;
+  --primary: #b26e63; /* Coral suave como cor primária */
+  --primary-foreground: #ffffff;
+  --secondary: #c0caad; /* Verde claro como secundário */
+  --secondary-foreground: #654c4f;
+  --muted: #f1f3f5; /* Cinza muito claro */
+  --muted-foreground: #9da9a0; /* Verde acinzentado para texto muted */
+  --accent: #cec075; /* Dourado como cor de destaque */
+  --accent-foreground: #654c4f;
+  --destructive: #e63946; /* Vermelho vibrante para ações destrutivas */
+  --border: #e9ecef; /* Borda clara */
+  --input: #e9ecef; /* Input com mesma cor da borda */
+  --ring: #b26e63; /* Anel de foco usando a cor primária */
+
+  /* Cores para gráficos */
+  --chart-1: #b26e63; /* Coral */
+  --chart-2: #cec075; /* Dourado */
+  --chart-3: #9da9a0; /* Verde acinzentado */
+  --chart-4: #654c4f; /* Roxo escuro */
+  --chart-5: #c0caad; /* Verde claro */
+
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #654c4f;
+  --sidebar-primary: #b26e63;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #c0caad;
+  --sidebar-accent-foreground: #654c4f;
+  --sidebar-border: #e9ecef;
+  --sidebar-ring: #b26e63;
+}
+
+.dark {
+  --background: #1a1a1a; /* Fundo escuro */
+  --foreground: #e9ecef; /* Texto claro */
+  --card: #2d2d2d; /* Cards mais escuros */
+  --card-foreground: #e9ecef;
+  --popover: #2d2d2d;
+  --popover-foreground: #e9ecef;
+  --primary: #cec075; /* Dourado como primário no dark */
+  --primary-foreground: #1a1a1a;
+  --secondary: #654c4f; /* Roxo escuro como secundário */
+  --secondary-foreground: #e9ecef;
+  --muted: #3d3d3d;
+  --muted-foreground: #9da9a0;
+  --accent: #b26e63; /* Coral como destaque */
+  --accent-foreground: #e9ecef;
+  --destructive: #ff6b6b; /* Vermelho mais claro no dark */
+  --border: #3d3d3d;
+  --input: #3d3d3d;
+  --ring: #cec075; /* Anel de foco dourado */
+
+  /* Cores para gráficos no dark */
+  --chart-1: #cec075; /* Dourado */
+  --chart-2: #b26e63; /* Coral */
+  --chart-3: #9da9a0; /* Verde acinzentado */
+  --chart-4: #c0caad; /* Verde claro */
+  --chart-5: #654c4f; /* Roxo escuro */
+
+  /* Sidebar dark */
+  --sidebar: #2d2d2d;
+  --sidebar-foreground: #e9ecef;
+  --sidebar-primary: #cec075;
+  --sidebar-primary-foreground: #1a1a1a;
+  --sidebar-accent: #654c4f;
+  --sidebar-accent-foreground: #e9ecef;
+  --sidebar-border: #3d3d3d;
+  --sidebar-ring: #cec075;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
