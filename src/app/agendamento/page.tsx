@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import {
   Card,
   CardContent,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,12 +34,25 @@ import {
   ChevronLeft,
   ChevronRight,
   Plus,
-  ChevronDown,
-  ChevronUp,
+  X,
+  Check,
+  Edit,
+  Trash2,
+  ArrowLeft
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Sidebar } from '@/components/sideBar'
 import { useMediaQuery } from '@react-hook/media-query'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 
 type Appointment = {
   id: string
@@ -49,6 +64,19 @@ type Appointment = {
   time: string
   duration: number
   status: 'confirmed' | 'pending' | 'canceled' | 'completed'
+  notes?: string
+}
+
+type Service = {
+  id: string
+  name: string
+  duration: number
+  price: number
+}
+
+type Barber = {
+  id: string
+  name: string
 }
 
 export default function AppointmentsPage() {
@@ -59,9 +87,27 @@ export default function AppointmentsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentDate, setCurrentDate] = useState(new Date())
   const [expandedAppointment, setExpandedAppointment] = useState<string | null>(null)
+  const [currentAppointment, setCurrentAppointment] = useState<Appointment | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [view, setView] = useState<'list' | 'form'>('list')
 
-  // Mock data - substitua por chamada à API
+  // Mock data
+  const services: Service[] = [
+    { id: '1', name: 'Corte Social', duration: 30, price: 50 },
+    { id: '2', name: 'Barba Completa', duration: 45, price: 40 },
+    { id: '3', name: 'Corte + Barba', duration: 60, price: 80 },
+    { id: '4', name: 'Corte Infantil', duration: 30, price: 40 },
+    { id: '5', name: 'Sobrancelha', duration: 15, price: 20 },
+  ]
+
+  const barbers: Barber[] = [
+    { id: '1', name: 'Carlos' },
+    { id: '2', name: 'Ricardo' },
+    { id: '3', name: 'Marcos' },
+  ]
+
   useEffect(() => {
+    // Simulando busca na API
     const mockAppointments: Appointment[] = [
       {
         id: '1',
@@ -73,6 +119,7 @@ export default function AppointmentsPage() {
         time: '10:00',
         duration: 60,
         status: 'confirmed',
+        notes: 'Cliente prefere cabelo mais curto nas laterais'
       },
       {
         id: '2',
@@ -83,7 +130,7 @@ export default function AppointmentsPage() {
         date: new Date().toISOString().split('T')[0],
         time: '11:30',
         duration: 30,
-        status: 'pending',
+        status: 'pending'
       },
       {
         id: '3',
@@ -94,40 +141,7 @@ export default function AppointmentsPage() {
         date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
         time: '14:00',
         duration: 45,
-        status: 'confirmed',
-      },
-      {
-        id: '4',
-        clientName: 'Lucas Mendes',
-        clientPhone: '(11) 92345-6789',
-        service: 'Corte + Sobrancelha',
-        barber: 'Ricardo',
-        date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-        time: '16:00',
-        duration: 45,
-        status: 'confirmed',
-      },
-      {
-        id: '5',
-        clientName: 'Antônio Costa',
-        clientPhone: '(11) 94567-8910',
-        service: 'Corte Infantil',
-        barber: 'Carlos',
-        date: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0],
-        time: '09:00',
-        duration: 30,
-        status: 'pending',
-      },
-      {
-        id: '6',
-        clientName: 'Rafael Souza',
-        clientPhone: '(11) 95678-9012',
-        service: 'Corte + Barba',
-        barber: 'Ricardo',
-        date: new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0],
-        time: '13:30',
-        duration: 60,
-        status: 'confirmed',
+        status: 'confirmed'
       },
     ]
     setAppointments(mockAppointments)
@@ -203,6 +217,290 @@ export default function AppointmentsPage() {
     setCurrentDate(newDate)
   }
 
+  const handleStatusChange = (id: string, newStatus: Appointment['status']) => {
+    setAppointments(appointments.map(appt => 
+      appt.id === id ? { ...appt, status: newStatus } : appt
+    ))
+  }
+
+  const handleEdit = (appointment: Appointment) => {
+    setCurrentAppointment(appointment)
+    setView('form')
+  }
+
+  const handleCreateNew = () => {
+    setCurrentAppointment({
+      id: '',
+      clientName: '',
+      clientPhone: '',
+      service: services[0].name,
+      barber: barbers[0].name,
+      date: new Date().toISOString().split('T')[0],
+      time: '10:00',
+      duration: services[0].duration,
+      status: 'pending',
+      notes: ''
+    })
+    setView('form')
+  }
+
+  const handleDelete = (id: string) => {
+    setAppointments(appointments.filter(appt => appt.id !== id))
+    setIsDeleteDialogOpen(false)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!currentAppointment) return
+
+    if (currentAppointment.id) {
+      // Edição
+      setAppointments(appointments.map(appt => 
+        appt.id === currentAppointment.id ? currentAppointment : appt
+      ))
+    } else {
+      // Novo agendamento
+      setAppointments([...appointments, {
+        ...currentAppointment,
+        id: `appt-${Date.now()}`
+      }])
+    }
+    setView('list')
+  }
+
+  const handleServiceChange = (serviceName: string) => {
+    const selectedService = services.find(s => s.name === serviceName)
+    if (selectedService && currentAppointment) {
+      setCurrentAppointment({
+        ...currentAppointment,
+        service: serviceName,
+        duration: selectedService.duration
+      })
+    }
+  }
+
+  if (view === 'form') {
+    return (
+      <div className="flex">
+        <Sidebar />
+        <div className="min-h-screen flex-1 bg-gray-50 p-4 md:p-6">
+          <div className="max-w-3xl mx-auto">
+            <Button 
+              variant="outline" 
+              className="mb-6" 
+              onClick={() => setView('list')}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Voltar para agendamentos
+            </Button>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  {currentAppointment?.id ? 'Editar Agendamento' : 'Novo Agendamento'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="clientName">Nome do Cliente</Label>
+                      <Input
+                        id="clientName"
+                        value={currentAppointment?.clientName || ''}
+                        onChange={(e) => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          clientName: e.target.value
+                        })}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="clientPhone">Telefone</Label>
+                      <Input
+                        id="clientPhone"
+                        value={currentAppointment?.clientPhone || ''}
+                        onChange={(e) => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          clientPhone: e.target.value
+                        })}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="service">Serviço</Label>
+                      <Select
+                        value={currentAppointment?.service || ''}
+                        onValueChange={handleServiceChange}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um serviço" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {services.map(service => (
+                            <SelectItem key={service.id} value={service.name}>
+                              {service.name} ({service.duration} min)
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="barber">Barbeiro</Label>
+                      <Select
+                        value={currentAppointment?.barber || ''}
+                        onValueChange={(value) => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          barber: value
+                        })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um barbeiro" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {barbers.map(barber => (
+                            <SelectItem key={barber.id} value={barber.name}>
+                              {barber.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="date">Data</Label>
+                      <Input
+                        id="date"
+                        type="date"
+                        value={currentAppointment?.date || ''}
+                        onChange={(e) => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          date: e.target.value
+                        })}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="time">Horário</Label>
+                      <Input
+                        id="time"
+                        type="time"
+                        value={currentAppointment?.time || ''}
+                        onChange={(e) => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          time: e.target.value
+                        })}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Observações</Label>
+                    <Textarea
+                      id="notes"
+                      value={currentAppointment?.notes || ''}
+                      onChange={(e) => currentAppointment && setCurrentAppointment({
+                        ...currentAppointment,
+                        notes: e.target.value
+                      })}
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Status</Label>
+                    <div className="flex gap-2 flex-wrap">
+                      <Button
+                        type="button"
+                        variant={currentAppointment?.status === 'pending' ? 'default' : 'outline'}
+                        onClick={() => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          status: 'pending'
+                        })}
+                      >
+                        Pendente
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={currentAppointment?.status === 'confirmed' ? 'default' : 'outline'}
+                        onClick={() => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          status: 'confirmed'
+                        })}
+                      >
+                        Confirmado
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={currentAppointment?.status === 'completed' ? 'default' : 'outline'}
+                        onClick={() => currentAppointment && setCurrentAppointment({
+                          ...currentAppointment,
+                          status: 'completed'
+                        })}
+                      >
+                        Concluído
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-4">
+                    {currentAppointment?.id && (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => {
+                          setIsDeleteDialogOpen(true)
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Excluir
+                      </Button>
+                    )}
+                    <Button type="submit">
+                      <Check className="h-4 w-4 mr-2" />
+                      Salvar Agendamento
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Delete confirmation dialog */}
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirmar exclusão</DialogTitle>
+              <DialogDescription>
+                Tem certeza que deseja excluir este agendamento? Esta ação não pode ser desfeita.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button 
+                variant="destructive" 
+                onClick={() => {
+                  currentAppointment?.id && handleDelete(currentAppointment.id)
+                  setView('list')
+                }}
+              >
+                Confirmar Exclusão
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    )
+  }
+
   return (
     <div className="flex">
       <Sidebar />
@@ -220,7 +518,7 @@ export default function AppointmentsPage() {
             </div>
             
             <div className="flex items-center gap-2">
-              <Button size={isMobile ? "sm" : "default"}>
+              <Button size={isMobile ? "sm" : "default"} onClick={handleCreateNew}>
                 <Plus className="h-4 w-4 mr-2" />
                 Novo Agendamento
               </Button>
@@ -296,7 +594,7 @@ export default function AppointmentsPage() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     placeholder="Buscar cliente..."
-                    className="pl-9"
+                    className="pl-9 w-full"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -321,35 +619,30 @@ export default function AppointmentsPage() {
                 </Card>
               ) : (
                 filteredAppointments.map((appt) => (
-                  <Card key={appt.id} className="hover:shadow-md transition-shadow">
+                  <Card key={appt.id} className="w-full hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div 
                         className="flex justify-between items-center cursor-pointer"
                         onClick={() => toggleExpandAppointment(appt.id)}
                       >
-                        <div>
-                          <p className="font-medium">{appt.clientName}</p>
+                        <div className="w-full">
+                          <div className="flex justify-between w-full">
+                            <p className="font-medium">{appt.clientName}</p>
+                            {getStatusBadge(appt.status)}
+                          </div>
                           <p className="text-sm text-gray-600 flex items-center mt-1">
                             <Clock className="h-3 w-3 mr-1" />
                             {appt.time} - {appt.duration} min
                           </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {getStatusBadge(appt.status)}
-                          {expandedAppointment === appt.id ? (
-                            <ChevronUp className="h-4 w-4" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4" />
-                          )}
+                          <p className="text-sm text-gray-600 flex items-center mt-1">
+                            <Scissors className="h-3 w-3 mr-1" />
+                            {appt.service}
+                          </p>
                         </div>
                       </div>
                       
                       {expandedAppointment === appt.id && (
                         <div className="mt-4 pt-4 border-t space-y-3">
-                          <div className="flex items-center text-sm">
-                            <Scissors className="h-4 w-4 mr-2 text-gray-500" />
-                            <span>{appt.service}</span>
-                          </div>
                           <div className="flex items-center text-sm">
                             <User className="h-4 w-4 mr-2 text-gray-500" />
                             <span>{appt.barber}</span>
@@ -363,13 +656,44 @@ export default function AppointmentsPage() {
                             <span>{formatDate(appt.date)}</span>
                           </div>
                           
+                          {appt.notes && (
+                            <div className="text-sm">
+                              <p className="font-medium text-gray-700">Observações:</p>
+                              <p className="text-gray-600">{appt.notes}</p>
+                            </div>
+                          )}
+                          
                           <div className="flex gap-2 mt-3">
-                            <Button variant="outline" size="sm" className="flex-1">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="flex-1"
+                              onClick={() => handleEdit(appt)}
+                            >
+                              <Edit className="h-4 w-4 mr-2" />
                               Editar
                             </Button>
-                            <Button variant="outline" size="sm" className="flex-1">
-                              {appt.status === 'confirmed' ? 'Cancelar' : 'Confirmar'}
-                            </Button>
+                            {appt.status === 'confirmed' ? (
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="flex-1"
+                                onClick={() => handleStatusChange(appt.id, 'canceled')}
+                              >
+                                <X className="h-4 w-4 mr-2" />
+                                Cancelar
+                              </Button>
+                            ) : (
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="flex-1"
+                                onClick={() => handleStatusChange(appt.id, 'confirmed')}
+                              >
+                                <Check className="h-4 w-4 mr-2" />
+                                Confirmar
+                              </Button>
+                            )}
                           </div>
                         </div>
                       )}
@@ -427,12 +751,30 @@ export default function AppointmentsPage() {
                           <TableCell>{getStatusBadge(appt.status)}</TableCell>
                           <TableCell>
                             <div className="flex gap-2">
-                              <Button variant="outline" size="sm">
-                                Editar
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleEdit(appt)}
+                              >
+                                <Edit className="h-4 w-4" />
                               </Button>
-                              <Button variant="outline" size="sm">
-                                {appt.status === 'confirmed' ? 'Cancelar' : 'Confirmar'}
-                              </Button>
+                              {appt.status === 'confirmed' ? (
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => handleStatusChange(appt.id, 'canceled')}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              ) : (
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => handleStatusChange(appt.id, 'confirmed')}
+                                >
+                                  <Check className="h-4 w-4" />
+                                </Button>
+                              )}
                             </div>
                           </TableCell>
                         </TableRow>
