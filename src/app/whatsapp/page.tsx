@@ -24,16 +24,15 @@ import {
   CheckCircle2,
   AlertCircle,
   QrCode,
-  Smartphone,
   Link,
   Unlink,
   Loader2,
   Settings,
   MessageSquare,
   ClockIcon,
+  Key,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sidebar } from "@/components/sideBar";
 import Image from "next/image";
 
@@ -44,14 +43,15 @@ type WhatsAppConnection = {
   status: "connected" | "disconnected" | "connecting" | "failed";
   lastActivity: string;
   qrCode?: string;
-  connectionMethod: "qr-code" | "mobile-device";
+  connectionMethod: "qr-code" | "api-key";
+  apiKey?: string;
 };
 
 export default function WhatsAppIntegrationPage() {
   const [connections, setConnections] = useState<WhatsAppConnection[]>([
     {
       id: "1",
-      name: "WhatsApp Principal",
+      name: "Conexão Principal",
       phoneNumber: "+55 11 98765-4321",
       status: "disconnected",
       lastActivity: "2023-06-20T14:30:00",
@@ -59,11 +59,12 @@ export default function WhatsAppIntegrationPage() {
     },
     {
       id: "2",
-      name: "WhatsApp Secundário",
+      name: "Conexão Oficial",
       phoneNumber: "+55 11 91234-5678",
-      status: "connected",
+      status: "disconnected",
       lastActivity: "2023-06-22T09:15:00",
-      connectionMethod: "mobile-device",
+      connectionMethod: "api-key",
+      apiKey: "",
     },
   ]);
 
@@ -72,13 +73,25 @@ export default function WhatsAppIntegrationPage() {
   const [currentConnection, setCurrentConnection] =
     useState<WhatsAppConnection | null>(null);
   const [connectionMethod, setConnectionMethod] = useState<
-    "qr-code" | "mobile-device"
+    "qr-code" | "api-key"
   >("qr-code");
   const [newConnectionName, setNewConnectionName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
-  console.log(isConnecting, currentConnection)
+  const [apiKey, setApiKey] = useState("");
+
+  console.log(isConnecting, currentConnection);
+
+  // Verifica se já existe uma conexão ativa
+  const hasActiveConnection = connections.some((c) => c.status === "connected");
 
   const handleConnect = (connection: WhatsAppConnection) => {
+    if (hasActiveConnection) {
+      alert(
+        "Você já tem uma conexão ativa. Desconecte-a antes de conectar outra."
+      );
+      return;
+    }
+
     setCurrentConnection(connection);
     setIsConnecting(true);
 
@@ -90,7 +103,6 @@ export default function WhatsAppIntegrationPage() {
         )
       );
 
-      // Simulação do QR Code sendo gerado
       if (connection.connectionMethod === "qr-code") {
         setTimeout(() => {
           setConnections(
@@ -109,7 +121,7 @@ export default function WhatsAppIntegrationPage() {
           setIsConnecting(false);
         }, 3000);
       } else {
-        // Método mobile device
+        // Método API Key
         setTimeout(() => {
           setConnections(
             connections.map((c) =>
@@ -118,6 +130,7 @@ export default function WhatsAppIntegrationPage() {
                     ...c,
                     status: "connected",
                     lastActivity: new Date().toISOString(),
+                    apiKey: apiKey,
                   }
                 : c
             )
@@ -144,10 +157,13 @@ export default function WhatsAppIntegrationPage() {
       status: "disconnected",
       lastActivity: new Date().toISOString(),
       connectionMethod: connectionMethod,
+      apiKey: connectionMethod === "api-key" ? apiKey : undefined,
     };
+
     setConnections([...connections, newConnection]);
     setNewConnectionName("");
     setNewPhoneNumber("");
+    setApiKey("");
     setIsDialogOpen(false);
   };
 
@@ -186,304 +202,323 @@ export default function WhatsAppIntegrationPage() {
 
   return (
     <div className="flex">
-      <Sidebar/>
-    <div className="min-h-screen flex-1 bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Integração WhatsApp
-            </h1>
-            <p className="text-gray-600 mt-2">
-              Conecte seu WhatsApp para enviar mensagens automatizadas aos
-              clientes
+      <Sidebar />
+      <div className="min-h-screen flex-1 bg-gray-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Integração WhatsApp
+              </h1>
+              <p className="text-gray-600 mt-2">
+                Conecte seu WhatsApp para enviar mensagens automatizadas aos
+                clientes
+              </p>
+            </div>
+            <Button
+              onClick={() => setIsDialogOpen(true)}
+              disabled={hasActiveConnection}
+            >
+              <Link className="h-4 w-4 mr-2" />
+              Nova Conexão
+            </Button>
+          </div>
+
+          <div className="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <h3 className="font-medium text-blue-800 flex items-center">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              Limitação da API
+            </h3>
+            <p className="text-sm text-blue-700 mt-1">
+              Você só pode ter uma conexão ativa por vez (via QR Code ou API
+              Oficial).
             </p>
           </div>
-          <Button onClick={() => setIsDialogOpen(true)}>
-            <Link className="h-4 w-4 mr-2" />
-            Nova Conexão
-          </Button>
-        </div>
 
-        <Tabs defaultValue="all" className="mb-6">
-          <TabsList>
-            <TabsTrigger value="all">Todas</TabsTrigger>
-            <TabsTrigger value="connected">Conectadas</TabsTrigger>
-            <TabsTrigger value="disconnected">Desconectadas</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        <div className="grid gap-6">
-          {connections.map((connection) => (
-            <Card
-              key={connection.id}
-              className="hover:shadow-md transition-shadow"
-            >
-              <CardHeader className="pb-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="flex items-center">
-                      <MessageSquare className="h-5 w-5 mr-2 text-green-600" />
-                      {connection.name}
-                    </CardTitle>
-                    <CardDescription className="mt-1">
-                      {connection.phoneNumber}
-                    </CardDescription>
-                  </div>
-                  {getStatusBadge(connection.status)}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-between items-center">
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <ClockIcon className="h-4 w-4 mr-2" />
-                      Última atividade:{" "}
-                      {new Date(connection.lastActivity).toLocaleString()}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      {connection.connectionMethod === "qr-code" ? (
-                        <>
-                          <QrCode className="h-4 w-4 mr-2" />
-                          Método: QR Code
-                        </>
-                      ) : (
-                        <>
-                          <Smartphone className="h-4 w-4 mr-2" />
-                          Método: Dispositivo Móvel
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2">
-                    {connection.status === "disconnected" && (
-                      <Button
-                        variant="default"
-                        onClick={() => handleConnect(connection)}
-                      >
-                        <Link className="h-4 w-4 mr-2" />
-                        Conectar
-                      </Button>
-                    )}
-
-                    {connection.status === "connected" && (
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDisconnect(connection.id)}
-                      >
-                        <Unlink className="h-4 w-4 mr-2" />
-                        Desconectar
-                      </Button>
-                    )}
-
-                    {connection.status === "connecting" && (
-                      <Button variant="outline" disabled>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Conectando...
-                      </Button>
-                    )}
-
-                    <Button variant="ghost">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {connection.status === "connecting" && (
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">
-                        Conectando seu WhatsApp...
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        {connection.connectionMethod === "qr-code"
-                          ? "Passo 2 de 3"
-                          : "Passo 1 de 2"}
-                      </span>
-                    </div>
-                    <Progress
-                      value={
-                        connection.connectionMethod === "qr-code" ? 66 : 50
-                      }
-                      className="h-2"
-                    />
-
-                    {connection.connectionMethod === "qr-code" && (
-                      <div className="mt-6 text-center">
-                        <p className="text-sm font-medium mb-4">
-                          Escaneie o QR Code abaixo com seu WhatsApp
-                        </p>
-                        {connection.qrCode ? (
-                          <Image
-                            src={connection.qrCode}
-                            alt="QR Code para conexão"
-                            className="mx-auto h-40 w-40 border rounded-lg"
-                          />
+          <div className="grid gap-6">
+            {connections.map((connection) => (
+              <Card
+                key={connection.id}
+                className="hover:shadow-md transition-shadow"
+              >
+                <CardHeader className="pb-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="flex items-center">
+                        {connection.connectionMethod === "qr-code" ? (
+                          <MessageSquare className="h-5 w-5 mr-2 text-green-600" />
                         ) : (
-                          <div className="mx-auto h-40 w-40 border rounded-lg flex items-center justify-center bg-gray-100">
-                            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                          <Key className="h-5 w-5 mr-2 text-purple-600" />
+                        )}
+                        {connection.name}
+                      </CardTitle>
+                      <CardDescription className="mt-1">
+                        {connection.phoneNumber}
+                      </CardDescription>
+                    </div>
+                    {getStatusBadge(connection.status)}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-between items-center">
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <ClockIcon className="h-4 w-4 mr-2" />
+                        Última atividade:{" "}
+                        {new Date(connection.lastActivity).toLocaleString()}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        {connection.connectionMethod === "qr-code" ? (
+                          <>
+                            <QrCode className="h-4 w-4 mr-2" />
+                            Método: QR Code
+                          </>
+                        ) : (
+                          <>
+                            <Key className="h-4 w-4 mr-2" />
+                            Método: API Oficial
+                          </>
+                        )}
+                      </div>
+                      {connection.connectionMethod === "api-key" &&
+                        connection.apiKey && (
+                          <div className="flex items-center text-sm text-gray-600">
+                            <span className="truncate max-w-xs">
+                              Chave: ••••••••••••••••••••••••••••••••
+                            </span>
                           </div>
                         )}
-                        <p className="text-xs text-gray-500 mt-4">
-                          WhatsApp {">"} Configurações {">"} Dispositivos
-                          conectados {">"} Conectar um dispositivo
-                        </p>
-                      </div>
-                    )}
+                    </div>
 
-                    {connection.connectionMethod === "mobile-device" && (
-                      <div className="mt-6">
-                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                          <h4 className="font-medium text-blue-800 mb-2 flex items-center">
-                            <Smartphone className="h-4 w-4 mr-2" />
-                            Instruções para conexão via dispositivo móvel
-                          </h4>
-                          <ol className="list-decimal list-inside text-sm text-blue-700 space-y-1">
-                            <li>Abra o WhatsApp no seu celular</li>
-                            <li>
-                              Acesse Configurações {">"} Dispositivos conectados
-                            </li>
-                            <li>Toque em Conectar um dispositivo</li>
-                            <li>
-                              Aponte a câmera para o QR Code quando solicitado
-                            </li>
-                          </ol>
+                    <div className="flex space-x-2">
+                      {connection.status === "disconnected" && (
+                        <Button
+                          variant="default"
+                          onClick={() => handleConnect(connection)}
+                          disabled={hasActiveConnection}
+                        >
+                          <Link className="h-4 w-4 mr-2" />
+                          Conectar
+                        </Button>
+                      )}
+
+                      {connection.status === "connected" && (
+                        <Button
+                          variant="outline"
+                          onClick={() => handleDisconnect(connection.id)}
+                        >
+                          <Unlink className="h-4 w-4 mr-2" />
+                          Desconectar
+                        </Button>
+                      )}
+
+                      {connection.status === "connecting" && (
+                        <Button variant="outline" disabled>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Conectando...
+                        </Button>
+                      )}
+
+                      <Button variant="ghost">
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {connection.status === "connecting" && (
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-700">
+                          Conectando seu WhatsApp...
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {connection.connectionMethod === "qr-code"
+                            ? "Passo 2 de 3"
+                            : "Passo 1 de 2"}
+                        </span>
+                      </div>
+                      <Progress
+                        value={
+                          connection.connectionMethod === "qr-code" ? 66 : 50
+                        }
+                        className="h-2"
+                      />
+
+                      {connection.connectionMethod === "qr-code" && (
+                        <div className="mt-6 text-center">
+                          <p className="text-sm font-medium mb-4">
+                            Escaneie o QR Code abaixo com seu WhatsApp
+                          </p>
+                          {connection.qrCode ? (
+                            <Image
+                              src={connection.qrCode}
+                              alt="QR Code para conexão"
+                              width={160}
+                              height={160}
+                              className="mx-auto border rounded-lg"
+                            />
+                          ) : (
+                            <div className="mx-auto h-40 w-40 border rounded-lg flex items-center justify-center bg-gray-100">
+                              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                            </div>
+                          )}
+                          <p className="text-xs text-gray-500 mt-4">
+                            WhatsApp {">"} Configurações {">"} Dispositivos
+                            conectados {">"} Conectar um dispositivo
+                          </p>
                         </div>
-                      </div>
+                      )}
+
+                      {connection.connectionMethod === "api-key" && (
+                        <div className="mt-6">
+                          <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                            <h4 className="font-medium text-purple-800 mb-2 flex items-center">
+                              <Key className="h-4 w-4 mr-2" />
+                              Conectando via API Oficial
+                            </h4>
+                            <p className="text-sm text-purple-700">
+                              Validando sua chave de API com os servidores do
+                              WhatsApp...
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Add Connection Dialog */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[525px]">
+            <DialogHeader>
+              <DialogTitle>Nova Conexão WhatsApp</DialogTitle>
+              <DialogDescription>
+                Escolha um método de conexão (apenas uma conexão ativa por vez)
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Nome
+                </Label>
+                <Input
+                  id="name"
+                  value={newConnectionName}
+                  onChange={(e) => setNewConnectionName(e.target.value)}
+                  placeholder="Ex: Conexão Principal"
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="phone" className="text-right">
+                  Número
+                </Label>
+                <Input
+                  id="phone"
+                  value={newPhoneNumber}
+                  onChange={(e) => setNewPhoneNumber(e.target.value)}
+                  placeholder="+55 11 98765-4321"
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">Método</Label>
+                <div className="col-span-3 space-y-4">
+                  <div
+                    className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
+                      connectionMethod === "qr-code"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:bg-gray-50"
+                    }`}
+                    onClick={() => setConnectionMethod("qr-code")}
+                  >
+                    <div
+                      className={`p-2 rounded-full mr-4 ${
+                        connectionMethod === "qr-code"
+                          ? "bg-blue-100 text-blue-600"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      <QrCode className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium">Conexão via QR Code</h4>
+                      <p className="text-sm text-gray-600">
+                        Escaneie o QR Code pelo seu celular
+                      </p>
+                    </div>
+                    {connectionMethod === "qr-code" && (
+                      <CheckCircle2 className="h-5 w-5 text-blue-600" />
                     )}
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
 
-          {connections.length === 0 && (
-            <Card className="text-center py-12">
-              <CardContent>
-                <MessageSquare className="h-10 w-10 mx-auto text-gray-400" />
-                <h3 className="mt-4 text-lg font-medium text-gray-900">
-                  Nenhuma conexão WhatsApp configurada
-                </h3>
-                <p className="mt-2 text-gray-600">
-                  Conecte seu WhatsApp para começar a enviar mensagens
-                  automatizadas
-                </p>
-                <Button className="mt-6" onClick={() => setIsDialogOpen(true)}>
-                  <Link className="h-4 w-4 mr-2" />
-                  Criar primeira conexão
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </div>
-
-      {/* Add Connection Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[525px]">
-          <DialogHeader>
-            <DialogTitle>Nova Conexão WhatsApp</DialogTitle>
-            <DialogDescription>
-              Configure uma nova conexão com a API do WhatsApp para envio de
-              mensagens
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Nome
-              </Label>
-              <Input
-                id="name"
-                value={newConnectionName}
-                onChange={(e) => setNewConnectionName(e.target.value)}
-                placeholder="Ex: WhatsApp Principal"
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone" className="text-right">
-                Número
-              </Label>
-              <Input
-                id="phone"
-                value={newPhoneNumber}
-                onChange={(e) => setNewPhoneNumber(e.target.value)}
-                placeholder="+55 11 98765-4321"
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Método</Label>
-              <div className="col-span-3 space-y-4">
-                <div
-                  className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
-                    connectionMethod === "qr-code"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 hover:bg-gray-50"
-                  }`}
-                  onClick={() => setConnectionMethod("qr-code")}
-                >
                   <div
-                    className={`p-2 rounded-full mr-4 ${
-                      connectionMethod === "qr-code"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-gray-100 text-gray-600"
+                    className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
+                      connectionMethod === "api-key"
+                        ? "border-purple-500 bg-purple-50"
+                        : "border-gray-200 hover:bg-gray-50"
                     }`}
+                    onClick={() => setConnectionMethod("api-key")}
                   >
-                    <QrCode className="h-5 w-5" />
+                    <div
+                      className={`p-2 rounded-full mr-4 ${
+                        connectionMethod === "api-key"
+                          ? "bg-purple-100 text-purple-600"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      <Key className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium">API Oficial</h4>
+                      <p className="text-sm text-gray-600">
+                        Use sua chave de API do WhatsApp Business
+                      </p>
+                    </div>
+                    {connectionMethod === "api-key" && (
+                      <CheckCircle2 className="h-5 w-5 text-purple-600" />
+                    )}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium">Conexão via QR Code</h4>
-                    <p className="text-sm text-gray-600">
-                      Escaneie o QR Code pelo seu celular
-                    </p>
-                  </div>
-                  {connectionMethod === "qr-code" && (
-                    <CheckCircle2 className="h-5 w-5 text-blue-600" />
-                  )}
-                </div>
-
-                <div
-                  className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
-                    connectionMethod === "mobile-device"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 hover:bg-gray-50"
-                  }`}
-                  onClick={() => setConnectionMethod("mobile-device")}
-                >
-                  <div
-                    className={`p-2 rounded-full mr-4 ${
-                      connectionMethod === "mobile-device"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    <Smartphone className="h-5 w-5" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium">Conexão via Dispositivo</h4>
-                    <p className="text-sm text-gray-600">
-                      Use seu celular para parear automaticamente
-                    </p>
-                  </div>
-                  {connectionMethod === "mobile-device" && (
-                    <CheckCircle2 className="h-5 w-5 text-blue-600" />
-                  )}
                 </div>
               </div>
+
+              {connectionMethod === "api-key" && (
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="apiKey" className="text-right">
+                    Chave API
+                  </Label>
+                  <Input
+                    id="apiKey"
+                    type="password"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    placeholder="Insira sua chave de API"
+                    className="col-span-3"
+                  />
+                </div>
+              )}
             </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" onClick={handleAddConnection}>
-              <Link className="h-4 w-4 mr-2" />
-              Criar Conexão
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <DialogFooter>
+              <Button
+                type="button"
+                onClick={handleAddConnection}
+                disabled={
+                  !newConnectionName ||
+                  !newPhoneNumber ||
+                  (connectionMethod === "api-key" && !apiKey)
+                }
+              >
+                <Link className="h-4 w-4 mr-2" />
+                Criar Conexão
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
-        </div>
   );
 }
