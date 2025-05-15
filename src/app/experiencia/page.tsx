@@ -236,8 +236,8 @@ export default function CustomerExperienceAutomation() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="flex-1 min-h-screen bg-gray-50 p-6">
+        <div className=" mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
             Automação de Experiência do Cliente
           </h1>
@@ -263,7 +263,7 @@ export default function CustomerExperienceAutomation() {
             </TabsList>
           </Tabs>
 
-          <Card>
+          <Card className="">
             <CardHeader>
               <CardTitle>Regras de Automação</CardTitle>
               <CardDescription>
@@ -278,7 +278,6 @@ export default function CustomerExperienceAutomation() {
                     <TableHead>Status</TableHead>
                     <TableHead>Nome</TableHead>
                     <TableHead>Disparador</TableHead>
-                    <TableHead>Canais</TableHead>
                     <TableHead>Mensagem</TableHead>
                     <TableHead>Última Edição</TableHead>
                     <TableHead>Ações</TableHead>
@@ -317,28 +316,6 @@ export default function CustomerExperienceAutomation() {
                             <span className="ml-1">
                               ({rule.daysAfter} dias)
                             </span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-1">
-                          {rule.channels.includes("email") && (
-                            <Badge variant="outline">
-                              <MailIcon className="h-3 w-3 mr-1" />
-                              Email
-                            </Badge>
-                          )}
-                          {rule.channels.includes("sms") && (
-                            <Badge variant="outline">
-                              <MessageSquareIcon className="h-3 w-3 mr-1" />
-                              SMS
-                            </Badge>
-                          )}
-                          {rule.channels.includes("whatsapp") && (
-                            <Badge variant="outline">
-                              <MessageSquareIcon className="h-3 w-3 mr-1" />
-                              WhatsApp
-                            </Badge>
                           )}
                         </div>
                       </TableCell>
