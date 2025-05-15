@@ -31,8 +31,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { useRef } from "react";
-import { useInView } from "framer-motion";
 import ButtonPay from "@/presentation/checkout";
 
 const fadeIn = {
@@ -41,8 +39,6 @@ const fadeIn = {
 };
 
 export default function PricingPage() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
 
   return (
     <div className="min-h-screen bg-white">
