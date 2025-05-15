@@ -35,13 +35,13 @@ export function Sidebar() {
       icon: <Gift className="h-5 w-5" />,
     },
     {
-      name: "Transações",
-      href: "/transactions",
+      name: "Mensagens Automáticas",
+      href: "/experiencia",
       icon: <CreditCard className="h-5 w-5" />,
     },
     {
-      name: "Relatórios",
-      href: "/reports",
+      name: "Conexão",
+      href: "/whatsapp",
       icon: <BarChart2 className="h-5 w-5" />,
     },
   ];

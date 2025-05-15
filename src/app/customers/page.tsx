@@ -420,7 +420,7 @@ export default function PointsManagementSystem() {
               </TabsTrigger>
             </TabsList>
             {/* Users Tab */}
-            <TabsContent className="bg-red-400 " value="users">
+            <TabsContent className=" " value="users">
               <Card>
                 <CardHeader>
                   <CardTitle>User Management</CardTitle>
@@ -518,7 +518,7 @@ export default function PointsManagementSystem() {
             </TabsContent>
 
             {/* Rewards Tab */}
-            <TabsContent className="min-w-full bg-red-400 w-auto" value="rewards">
+            <TabsContent className="min-w-full w-auto" value="rewards">
               <Card>
                 <CardHeader>
                   <CardTitle>Rewards Catalog</CardTitle>
