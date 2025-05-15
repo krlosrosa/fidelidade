@@ -200,9 +200,8 @@ export default function PointsManagementSystem() {
     category: "Gift Cards",
   });
 
-  const [transactionForm, setTransactionForm] = useState<
-    Omit<PointTransaction, "id">
-  >({
+  const [transactionForm, setTransactionForm] = useState<PointTransaction>({
+    id: '1',
     date: new Date().toISOString().split("T")[0],
     description: "",
     amount: 0,
@@ -289,6 +288,7 @@ export default function PointsManagementSystem() {
       category: "Gift Cards",
     });
     setTransactionForm({
+      id:'1',
       date: new Date().toISOString().split("T")[0],
       description: "",
       amount: 0,
