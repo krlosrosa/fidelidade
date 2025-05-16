@@ -19,17 +19,17 @@ import { UserButton, useUser } from "@clerk/nextjs";
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useUser();
-  const router = useRouter()
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  if(user?.publicMetadata){
-    const metaData = user.publicMetadata
-    if(!metaData.hasCompletedOnboarding){
-      router.replace('/onboard')
+  if (user?.publicMetadata) {
+    const metaData = user.publicMetadata;
+    if (!metaData.hasCompletedOnboarding) {
+      router.replace("/onboard");
     }
   }
 
@@ -37,6 +37,11 @@ export function Sidebar() {
     {
       name: "Agendamento",
       href: "/agendamento",
+      icon: <LayoutDashboard className="h-5 w-5" />,
+    },
+    {
+      name: "Pontos",
+      href: "/points",
       icon: <LayoutDashboard className="h-5 w-5" />,
     },
     {
