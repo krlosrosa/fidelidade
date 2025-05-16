@@ -9,9 +9,10 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
-import { HistoryIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { HistoryIcon, PencilIcon, TrashIcon, PlusIcon, PhoneIcon, MailIcon, CakeIcon } from "lucide-react";
 import { SetStateAction } from "react";
 import { User } from "../types/user";
+import { useRouter } from "next/navigation";
 
 type Props = {
   customers: User[];
@@ -26,9 +27,16 @@ export default function TableCustomers({
   handleDeleteCustomer,
   setSelectedCustomer,
 }: Props) {
+  const router = useRouter();
+
+  const handleAddPoints = (customerId: string) => {
+    router.push(`/points?customerId=${customerId}`);
+  };
+
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className="rounded-md border overflow-x-auto">
+      {/* Desktop Table */}
+      <Table className="hidden md:table">
         <TableHeader className="bg-gray-50">
           <TableRow>
             <TableHead className="w-[200px]">Customer</TableHead>
@@ -72,7 +80,7 @@ export default function TableCustomers({
                 </div>
               </TableCell>
               <TableCell>
-                  {customer.points_balance.toLocaleString()} pts
+                {customer.points_balance.toLocaleString()} pts
               </TableCell>
               <TableCell>
                 <Badge
@@ -108,6 +116,7 @@ export default function TableCustomers({
                     size="sm"
                     onClick={() => handleEditCustomer(customer)}
                     className="h-8 w-8 p-0 hover:bg-blue-50"
+                    aria-label="Edit customer"
                   >
                     <PencilIcon className="h-4 w-4 text-blue-600" />
                   </Button>
@@ -116,6 +125,7 @@ export default function TableCustomers({
                     size="sm"
                     onClick={() => handleDeleteCustomer(customer.phone)}
                     className="h-8 w-8 p-0 hover:bg-red-50"
+                    aria-label="Delete customer"
                   >
                     <TrashIcon className="h-4 w-4 text-red-600" />
                   </Button>
@@ -124,8 +134,18 @@ export default function TableCustomers({
                     size="sm"
                     onClick={() => setSelectedCustomer(customer)}
                     className="h-8 w-8 p-0 hover:bg-gray-50"
+                    aria-label="View history"
                   >
                     <HistoryIcon className="h-4 w-4 text-gray-600" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleAddPoints(customer.id)}
+                    className="h-8 w-8 p-0 hover:bg-green-50"
+                    aria-label="Add points"
+                  >
+                    <PlusIcon className="h-4 w-4 text-green-600" />
                   </Button>
                 </div>
               </TableCell>
@@ -133,6 +153,113 @@ export default function TableCustomers({
           ))}
         </TableBody>
       </Table>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-4 p-4">
+        {customers.map((customer) => (
+          <div key={customer.phone} className="border rounded-lg p-4 shadow-sm">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <Avatar>
+                  <AvatarImage
+                    src={`https://i.pravatar.cc/150?u=${customer.phone}`}
+                    alt={customer.name}
+                  />
+                  <AvatarFallback>
+                    {customer.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium">{customer.name}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge
+                      variant={customer.status ? "default" : "outline"}
+                      className={
+                        customer.status
+                          ? "bg-green-100 text-green-800 text-xs"
+                          : "bg-red-100 text-red-800 text-xs"
+                      }
+                    >
+                      {customer.status ? "Active" : "Inactive"}
+                    </Badge>
+                    <span className="text-sm font-semibold text-gray-600">
+                      {customer.points_balance.toLocaleString()} pts
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleEditCustomer(customer)}
+                  className="h-8 w-8 p-0 hover:bg-blue-50"
+                  aria-label="Edit customer"
+                >
+                  <PencilIcon className="h-4 w-4 text-blue-600" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleAddPoints(customer.id)}
+                  className="h-8 w-8 p-0 hover:bg-green-50"
+                  aria-label="Add points"
+                >
+                  <PlusIcon className="h-4 w-4 text-green-600" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <PhoneIcon className="h-4 w-4 text-gray-500" />
+                <span>{customer.phone}</span>
+              </div>
+              {customer.email && (
+                <div className="flex items-center gap-2 text-sm">
+                  <MailIcon className="h-4 w-4 text-gray-500" />
+                  <span>{customer.email}</span>
+                </div>
+              )}
+              {customer.birth_date && (
+                <div className="flex items-center gap-2 text-sm">
+                  <CakeIcon className="h-4 w-4 text-gray-500" />
+                  <span>
+                    {new Date(customer.birth_date).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+              {customer.notes && (
+                <p className="text-sm text-gray-600 mt-2">
+                  <span className="font-medium">Notes: </span>
+                  {customer.notes}
+                </p>
+              )}
+            </div>
+
+            <div className="mt-4 flex justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedCustomer(customer)}
+                className="text-gray-600 hover:bg-gray-50"
+              >
+                <HistoryIcon className="h-4 w-4 mr-2" />
+                History
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleDeleteCustomer(customer.phone)}
+                className="text-red-600 hover:bg-red-50"
+              >
+                <TrashIcon className="h-4 w-4 mr-2" />
+                Delete
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

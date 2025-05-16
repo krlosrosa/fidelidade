@@ -13,8 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { AddPoints } from "@/domain/usecases/addPoints";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   addPoints: AddPoints;
@@ -23,8 +24,16 @@ type Props = {
 export default function AdicionarPontosPage({addPoints}: Props) {
   const [idCliente, setIdCliente] = useState("");
   const [point, setPoints] = useState("");
+  const searchParams = useSearchParams();
+  const customerId = searchParams.get('customerId');
 
   const {user} = useUser()
+
+  useEffect(() => {
+    if (customerId) {
+      setIdCliente(customerId);
+    }
+  }, [customerId]);
 
   // Mock function para adicionar pontos
   const handleAddPoints = async () => {
