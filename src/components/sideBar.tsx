@@ -72,6 +72,11 @@ export function Sidebar() {
   ];
 
   const secondaryItems = [
+        {
+      name: "Faq",
+      href: "/faq",
+      icon: <Settings className="h-5 w-5" />,
+    },
     {
       name: "Configurações",
       href: "/settings",
