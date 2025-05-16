@@ -7,15 +7,15 @@ import {
   HttpStatusCode
 } from "@/data/protocol/http/http-client";
 
+
 export class SupabaseHttpClient implements HttpClient {
   private readonly supabase: SupabaseClient;
 
   constructor(
     supabaseUrl: string,
-    supabaseKey: string,
-    private readonly defaultHeaders: Record<string, string> = {}
+    private readonly tenant_id?: string,
   ) {
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+    this.supabase = createClient(supabaseUrl, process.env.SUPA_BASE_KEY || '');
   }
 
   async request<R = any>(data: HttpRequest): Promise<HttpResponse<R>> {
@@ -25,7 +25,7 @@ export class SupabaseHttpClient implements HttpClient {
 
       switch (data.method) {
         case "get":
-          response = await this.supabase.from(data.url).select().maybeSingle();
+          response = await this.supabase.from(data.url).select('*').eq('tenant_id',  this.tenant_id)
           break;
         case "post":
           response = await this.supabase.from(data.url).insert(data.body);
