@@ -33,7 +33,6 @@ import {
   Key,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Sidebar } from "@/components/sideBar";
 import Image from "next/image";
 
 type WhatsAppConnection = {
@@ -201,8 +200,6 @@ export default function WhatsAppIntegrationPage() {
   };
 
   return (
-    <div className="flex">
-      <Sidebar />
       <div className="min-h-screen flex-1 bg-gray-50 p-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-6">
@@ -519,6 +516,5 @@ export default function WhatsAppIntegrationPage() {
           </DialogContent>
         </Dialog>
       </div>
-    </div>
   );
 }

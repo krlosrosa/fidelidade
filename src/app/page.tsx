@@ -12,7 +12,6 @@ import {
   ZapIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sidebar } from "@/components/sideBar";
 
 export default function Home() {
   // Mock data - dados do estabelecimento
@@ -60,9 +59,6 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex">
-      <Sidebar />
-
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -253,6 +249,5 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
   );
 }

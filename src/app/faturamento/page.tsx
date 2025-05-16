@@ -28,7 +28,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Sidebar } from "@/components/sideBar";
 
 type Subscription = {
   id: string;
@@ -133,7 +132,6 @@ export default function MySubscriptionPage() {
 
   return (
     <div className="flex">
-      <Sidebar />
       <div className="min-h-screen flex-1 bg-gray-50 p-4 md:p-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">

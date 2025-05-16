@@ -49,7 +49,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sidebar } from "@/components/sideBar";
 
 type AutomationRule = {
   id: string;
@@ -234,8 +233,6 @@ export default function CustomerExperienceAutomation() {
   };
 
   return (
-    <div className="flex">
-      <Sidebar />
       <div className="flex-1 min-h-screen bg-gray-50 p-6">
         <div className=" mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
@@ -588,6 +585,5 @@ export default function CustomerExperienceAutomation() {
           </Dialog>
         </div>
       </div>
-    </div>
   );
 }

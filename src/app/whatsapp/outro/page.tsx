@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { Sidebar } from "@/components/sideBar";
 
 export default function AtendimentoPage() {
   // Mock data - configurações do atendimento
@@ -44,8 +43,6 @@ export default function AtendimentoPage() {
   };
 
   return (
-    <div className="flex">
-      <Sidebar />
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
@@ -354,6 +351,5 @@ export default function AtendimentoPage() {
           </Tabs>
         </div>
       </div>
-    </div>
   );
 }

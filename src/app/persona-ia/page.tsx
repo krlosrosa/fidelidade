@@ -33,7 +33,6 @@ import {
   Loader2
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Sidebar } from '@/components/sideBar'
 
 type BusinessInfo = {
   businessName: string
@@ -147,8 +146,6 @@ export default function BusinessProfilePage() {
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1))
 
   return (
-    <div className="flex">
-      <Sidebar />
       <div className="min-h-screen min-w-full flex-1 bg-gray-50 p-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -432,6 +429,5 @@ export default function BusinessProfilePage() {
           </form>
         </div>
       </div>
-    </div>
   )
 }

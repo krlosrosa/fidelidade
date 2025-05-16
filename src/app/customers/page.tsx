@@ -46,7 +46,6 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Sidebar } from "@/components/sideBar";
 
 // Mock data
 type User = {
@@ -342,8 +341,6 @@ export default function PointsManagementSystem() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="flex">
-      <Sidebar />
       <div className="flex-1 min-h-screen min-w-full bg-gray-50 p-6">
         <div className="mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
@@ -1195,6 +1192,5 @@ export default function PointsManagementSystem() {
           </Dialog>
         </div>
       </div>
-    </div>
   );
 }

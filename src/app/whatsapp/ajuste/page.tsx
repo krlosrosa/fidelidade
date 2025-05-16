@@ -19,7 +19,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Sidebar } from "@/components/sideBar";
 
 export default function FidelidadePage() {
   // Mock data - configurações de fidelidade
@@ -40,8 +39,6 @@ export default function FidelidadePage() {
   ];
 
   return (
-    <div className="flex">
-      <Sidebar />
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="mx-auto">
           {/* Header */}
@@ -323,6 +320,5 @@ export default function FidelidadePage() {
           </Tabs>
         </div>
       </div>
-    </div>
   );
 }

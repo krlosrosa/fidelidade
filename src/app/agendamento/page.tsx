@@ -42,7 +42,7 @@ import {
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Sidebar } from '@/components/sideBar'
+
 import { useMediaQuery } from '@react-hook/media-query'
 import {
   Dialog,
@@ -281,8 +281,6 @@ export default function AppointmentsPage() {
 
   if (view === 'form') {
     return (
-      <div className="flex">
-        <Sidebar />
         <div className="min-h-screen flex-1 bg-gray-50 p-4 md:p-6">
           <div className="max-w-3xl mx-auto">
             <Button 
@@ -470,7 +468,6 @@ export default function AppointmentsPage() {
               </CardContent>
             </Card>
           </div>
-        </div>
 
         {/* Delete confirmation dialog */}
         <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -502,8 +499,6 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="flex">
-      <Sidebar />
       <div className="min-h-screen flex-1 bg-gray-50 p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
@@ -787,6 +782,5 @@ export default function AppointmentsPage() {
           )}
         </div>
       </div>
-    </div>
   )
 }
