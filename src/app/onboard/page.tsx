@@ -4,7 +4,7 @@ import OnboardingInput from "./outro";
 import { RemoteAddAccount } from "@/data/usecases/remote-add-account";
 
 export default function Onboarding() {
-  const novo = new SupabaseHttpClient(process.env.URL_SUPA_BASE || "");
+  const novo = new SupabaseHttpClient();
   const repository = new RemoteAddAccount("tenants", novo);
   return <OnboardingInput useCase={repository} />;
 }

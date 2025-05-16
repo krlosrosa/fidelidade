@@ -12,10 +12,9 @@ export class SupabaseHttpClient implements HttpClient {
   private readonly supabase: SupabaseClient;
 
   constructor(
-    supabaseUrl: string,
     private readonly tenant_id?: string,
   ) {
-    this.supabase = createClient(supabaseUrl, process.env.SUPA_BASE_KEY || '');
+    this.supabase = createClient(process.env.NEXT_PUBLIC_URL_SUPA_BASE || '', process.env.NEXT_PUBLIC_SUPA_BASE_KEY || '');
   }
 
   async request<R = any>(data: HttpRequest): Promise<HttpResponse<R>> {

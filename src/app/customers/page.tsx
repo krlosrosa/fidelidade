@@ -8,10 +8,9 @@ import { RemoteEditCliente } from "@/data/usecases/remote-edit-client";
 
 export default function Customer() {
   const { user } = useUser();
-  const novo = new SupabaseHttpClient(
-    process.env.URL_SUPA_BASE || "",
-    user?.id
-  );
+  
+  const novo = new SupabaseHttpClient(user?.id);
+
   const repository = new RemoteAddACliente("customers", novo);
   const getClients = new RemoteGetCliente("customers", novo);
   const editClient = new RemoteEditCliente("customers", novo);
