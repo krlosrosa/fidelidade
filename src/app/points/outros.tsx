@@ -1,5 +1,4 @@
 "use client";
-// app/pontos/adicionar/page.tsx
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PlusIcon,
@@ -7,6 +6,7 @@ import {
   QrCodeIcon,
   SearchIcon,
   ZapIcon,
+  XIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,18 +16,20 @@ import { AddPoints } from "@/domain/usecases/addPoints";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
+import QrScanner from "@/components/qrCodeScanner";
 
 type Props = {
   addPoints: AddPoints;
 };
 
-export default function AdicionarPontosPage({addPoints}: Props) {
+export default function AdicionarPontosPage({ addPoints }: Props) {
   const [idCliente, setIdCliente] = useState("");
   const [point, setPoints] = useState("");
+  const [showScanner, setShowScanner] = useState(false);
   const searchParams = useSearchParams();
-  const customerId = searchParams.get('customerId');
+  const customerId = searchParams.get("customerId");
 
-  const {user} = useUser()
+  const { user } = useUser();
 
   useEffect(() => {
     if (customerId) {
@@ -35,23 +37,19 @@ export default function AdicionarPontosPage({addPoints}: Props) {
     }
   }, [customerId]);
 
-  // Mock function para adicionar pontos
   const handleAddPoints = async () => {
-    if(user?.id){
-     const info = await addPoints.addPoints({
+    if (user?.id) {
+      const info = await addPoints.addPoints({
         customer_id: idCliente,
         points: parseInt(point),
         tenant_id: user?.id,
-        type: 'earn'
-      })
+        type: "earn",
+      });
 
-      console.log(info)
+      console.log(info);
     }
     toast("Pontos adicionados com sucesso!");
-
-    // Aqui você implementaria a lógica real de adicionar pontos
   };
-
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-md mx-auto">
@@ -64,6 +62,33 @@ export default function AdicionarPontosPage({addPoints}: Props) {
             Registre pontos para seus clientes de forma rápida
           </p>
         </header>
+
+        {/* QR Code Scanner Modal */}
+        {showScanner && (
+          <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4">
+            <div className="w-full max-w-md">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-white">
+                  Escaneie o QR Code
+                </h2>
+                <button
+                  onClick={() => setShowScanner(false)}
+                  className="text-white hover:text-gray-300"
+                >
+                  <XIcon className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="relative aspect-square w-full rounded-lg overflow-hidden">
+                <QrScanner setText={setIdCliente} />
+                <div className="absolute inset-0 border-4 border-primary rounded-lg pointer-events-none" />
+              </div>
+              <p className="mt-4 text-white text-center">
+                Posicione o QR Code dentro da área destacada
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Card principal */}
         <Card className="shadow-sm">
@@ -93,7 +118,12 @@ export default function AdicionarPontosPage({addPoints}: Props) {
                     <UserIcon className="w-4 h-4 mr-2" />
                     Últimos clientes
                   </Button>
-                  <Button variant="ghost" size="sm" className="text-primary">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-primary"
+                    onClick={() => setShowScanner(true)}
+                  >
                     <QrCodeIcon className="w-4 h-4 mr-2" />
                     Ler QR Code
                   </Button>
@@ -124,7 +154,7 @@ export default function AdicionarPontosPage({addPoints}: Props) {
                     Pontos a adicionar:
                   </span>
                   <span className="text-lg font-bold text-blue-600">
-                    120 pts
+                    {point ? `${point} pts` : "0 pts"}
                   </span>
                 </div>
               </div>
@@ -145,6 +175,7 @@ export default function AdicionarPontosPage({addPoints}: Props) {
               <Button
                 className="w-full py-6 text-lg font-bold"
                 onClick={handleAddPoints}
+                disabled={!idCliente || !point}
               >
                 <PlusIcon className="w-5 h-5 mr-2" />
                 Confirmar Pontos
@@ -159,11 +190,19 @@ export default function AdicionarPontosPage({addPoints}: Props) {
             ATALHOS RÁPIDOS
           </h3>
           <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button
+              variant="outline"
+              className="h-20 flex-col gap-2"
+              onClick={() => setPoints("50")}
+            >
               <ZapIcon className="w-5 h-5 text-primary" />
               <span>Adicionar 50 pts</span>
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button
+              variant="outline"
+              className="h-20 flex-col gap-2"
+              onClick={() => setPoints("100")}
+            >
               <ZapIcon className="w-5 h-5 text-primary" />
               <span>Adicionar 100 pts</span>
             </Button>
