@@ -12,6 +12,7 @@ import {
   ZapIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   // Mock data - dados do estabelecimento
@@ -24,6 +25,7 @@ export default function Home() {
     rewardsRedeemed: 56,
   };
 
+  const router = useRouter()
   // Funcionalidades principais
   const features = [
     {
@@ -52,10 +54,10 @@ export default function Home() {
 
   // Ações rápidas
   const quickActions = [
-    { title: "Cadastrar Prêmios", icon: <GiftIcon className="w-5 h-5" /> },
-    { title: "Criar Campanha", icon: <ZapIcon className="w-5 h-5" /> },
-    { title: "Ver Relatórios", icon: <BarChartIcon className="w-5 h-5" /> },
-    { title: "Configurar IA", icon: <SettingsIcon className="w-5 h-5" /> },
+    { title: "Cadastrar Pontos", icon: <GiftIcon className="w-5 h-5" />, href: '/points'},
+    { title: "Criar Campanha", icon: <ZapIcon className="w-5 h-5" />, href: '/' },
+    { title: "Ver Relatórios", icon: <BarChartIcon className="w-5 h-5" />, href: '/' },
+    { title: "Configurar IA", icon: <SettingsIcon className="w-5 h-5" /> , href: '/'},
   ];
 
   return (
@@ -86,6 +88,7 @@ export default function Home() {
                         key={index}
                         variant="outline"
                         className="h-24 flex flex-col items-center justify-center gap-2"
+                        onClick={()=> router.push(action.href)}
                       >
                         {action.icon}
                         <span>{action.title}</span>
