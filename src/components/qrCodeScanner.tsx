@@ -5,9 +5,10 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 
 type Props = {
   setText: Dispatch<SetStateAction<string>>;
+  showScanner: Dispatch<SetStateAction<boolean>>;
 };
 
-const QrScanner = ({ setText }: Props) => {
+const QrScanner = ({ setText, showScanner }: Props) => {
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
       "qr-reader",
@@ -17,6 +18,7 @@ const QrScanner = ({ setText }: Props) => {
 
     const onSuccess = (decodedText: string) => {
       setText(decodedText);
+      showScanner(false)
       scanner.clear().catch((error) => {
         console.error("Erro ao limpar scanner após leitura:", error);
       });

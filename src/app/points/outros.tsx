@@ -80,7 +80,7 @@ export default function AdicionarPontosPage({ addPoints }: Props) {
               </div>
 
               <div className="relative aspect-square w-full rounded-lg overflow-hidden">
-                <QrScanner setText={setIdCliente} />
+                <QrScanner showScanner={setShowScanner} setText={setIdCliente} />
                 <div className="absolute inset-0 border-4 border-primary rounded-lg pointer-events-none" />
               </div>
               <p className="mt-4 text-white text-center">
