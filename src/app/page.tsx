@@ -61,32 +61,16 @@ export default function Home() {
   return (
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
-                    {/* Funcionalidades principais */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-6">O que você pode fazer</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {features.map((feature, index) => (
-                <Card
-                  key={index}
-                  className="hover:shadow-md transition-shadow h-full"
-                >
-                  <CardHeader>
-                    <div className="mb-4">{feature.icon}</div>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{feature.description}</p>
-                    <Button variant="link" className="pl-0 mt-4">
-                      Começar a usar →
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+          {/* Header */}
+          <header className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Olá, {establishment.name}!
+            </h1>
+            <p className="text-gray-600">
+              Bem-vindo ao seu painel de fidelidade inteligente via WhatsApp
+            </p>
 
-          {/* Ações rápidas e tutoriais */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          </header>
             <div className="lg:col-span-2">
               <Card className="bg-white shadow-sm">
                 <CardHeader>
@@ -111,78 +95,6 @@ export default function Home() {
                 </CardContent>
               </Card>
             </div>
-            <div>
-              <Card className="bg-white shadow-sm h-full">
-                <CardHeader>
-                  <CardTitle>Primeiros passos</CardTitle>
-                  <CardDescription>
-                    Configure seu sistema em minutos
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 p-1 rounded-full mt-1">
-                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
-                          1
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="font-medium">
-                          Cadastre suas informações
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Horários, serviços, localização
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 p-1 rounded-full mt-1">
-                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
-                          2
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="font-medium">
-                          Configure as recompensas
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Pontos necessários e prêmios
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 p-1 rounded-full mt-1">
-                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
-                          3
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="font-medium">Conecte seu WhatsApp</h3>
-                        <p className="text-sm text-gray-600">
-                          Integração simples em 2 minutos
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <Button className="mt-6 w-full">
-                    Guia completo de configuração
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-          {/* Header */}
-          <header className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Olá, {establishment.name}!
-            </h1>
-            <p className="text-gray-600">
-              Bem-vindo ao seu painel de fidelidade inteligente via WhatsApp
-            </p>
-
-          </header>
-
           {/* Destaques */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Card className="bg-white shadow-sm">
@@ -247,7 +159,93 @@ export default function Home() {
             </Card>
           </div>
 
+          {/* Funcionalidades principais */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-6">O que você pode fazer</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {features.map((feature, index) => (
+                <Card
+                  key={index}
+                  className="hover:shadow-md transition-shadow h-full"
+                >
+                  <CardHeader>
+                    <div className="mb-4">{feature.icon}</div>
+                    <CardTitle className="text-lg">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600">{feature.description}</p>
+                    <Button variant="link" className="pl-0 mt-4">
+                      Começar a usar →
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
 
+          {/* Ações rápidas e tutoriais */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div>
+              <Card className="bg-white shadow-sm h-full">
+                <CardHeader>
+                  <CardTitle>Primeiros passos</CardTitle>
+                  <CardDescription>
+                    Configure seu sistema em minutos
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-1 rounded-full mt-1">
+                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
+                          1
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">
+                          Cadastre suas informações
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Horários, serviços, localização
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-1 rounded-full mt-1">
+                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
+                          2
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">
+                          Configure as recompensas
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Pontos necessários e prêmios
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-1 rounded-full mt-1">
+                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
+                          3
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Conecte seu WhatsApp</h3>
+                        <p className="text-sm text-gray-600">
+                          Integração simples em 2 minutos
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <Button className="mt-6 w-full">
+                    Guia completo de configuração
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </div>
   );
