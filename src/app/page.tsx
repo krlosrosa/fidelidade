@@ -95,6 +95,69 @@ export default function Home() {
                 </CardContent>
               </Card>
             </div>
+                      {/* Ações rápidas e tutoriais */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div>
+              <Card className="bg-white shadow-sm h-full">
+                <CardHeader>
+                  <CardTitle>Primeiros passos</CardTitle>
+                  <CardDescription>
+                    Configure seu sistema em minutos
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-1 rounded-full mt-1">
+                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
+                          1
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">
+                          Cadastre suas informações
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Horários, serviços, localização
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-1 rounded-full mt-1">
+                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
+                          2
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">
+                          Configure as recompensas
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Pontos necessários e prêmios
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-1 rounded-full mt-1">
+                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
+                          3
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Conecte seu WhatsApp</h3>
+                        <p className="text-sm text-gray-600">
+                          Integração simples em 2 minutos
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <Button className="mt-6 w-full">
+                    Guia completo de configuração
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
           {/* Destaques */}
           <div className="grid grid-cols-1 mt-4 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Card className="bg-white shadow-sm">
@@ -183,69 +246,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Ações rápidas e tutoriais */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div>
-              <Card className="bg-white shadow-sm h-full">
-                <CardHeader>
-                  <CardTitle>Primeiros passos</CardTitle>
-                  <CardDescription>
-                    Configure seu sistema em minutos
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 p-1 rounded-full mt-1">
-                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
-                          1
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="font-medium">
-                          Cadastre suas informações
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Horários, serviços, localização
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 p-1 rounded-full mt-1">
-                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
-                          2
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="font-medium">
-                          Configure as recompensas
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Pontos necessários e prêmios
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 p-1 rounded-full mt-1">
-                        <span className="text-primary text-sm font-bold w-5 h-5 flex items-center justify-center">
-                          3
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="font-medium">Conecte seu WhatsApp</h3>
-                        <p className="text-sm text-gray-600">
-                          Integração simples em 2 minutos
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <Button className="mt-6 w-full">
-                    Guia completo de configuração
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+
         </div>
       </div>
   );
