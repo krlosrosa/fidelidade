@@ -96,7 +96,7 @@ export default function Home() {
               </Card>
             </div>
           {/* Destaques */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 mt-4 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Card className="bg-white shadow-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
