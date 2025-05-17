@@ -39,15 +39,15 @@ export default function AdicionarPontosPage({ addPoints }: Props) {
 
   const handleAddPoints = async () => {
     if (user?.id) {
-      const info = await addPoints.addPoints({
+     await addPoints.addPoints({
         customer_id: idCliente,
         points: parseInt(point),
         tenant_id: user?.id,
         type: "earn",
       });
-
-      console.log(info);
     }
+    setIdCliente("")
+    setPoints("")
     toast("Pontos adicionados com sucesso!");
   };
   return (
