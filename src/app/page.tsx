@@ -10,6 +10,7 @@ import {
   BarChartIcon,
   SettingsIcon,
   ZapIcon,
+  Gamepad
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -55,7 +56,7 @@ export default function Home() {
   // Ações rápidas
   const quickActions = [
     { title: "Cadastrar Pontos", icon: <GiftIcon className="w-5 h-5" />, href: '/points'},
-    { title: "Criar Campanha", icon: <ZapIcon className="w-5 h-5" />, href: '/' },
+    { title: "Roleta", icon: <Gamepad className="w-5 h-5" />, href: '/roleta' },
     { title: "Ver Relatórios", icon: <BarChartIcon className="w-5 h-5" />, href: '/' },
     { title: "Configurar IA", icon: <SettingsIcon className="w-5 h-5" /> , href: '/'},
   ];
