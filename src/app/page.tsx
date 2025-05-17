@@ -61,82 +61,7 @@ export default function Home() {
   return (
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <header className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Olá, {establishment.name}!
-            </h1>
-            <p className="text-gray-600">
-              Bem-vindo ao seu painel de fidelidade inteligente via WhatsApp
-            </p>
-
-          </header>
-
-          {/* Destaques */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <Card className="bg-white shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Clientes</p>
-                    <p className="text-2xl font-bold">
-                      {establishment.clients}
-                    </p>
-                  </div>
-                  <div className="bg-primary/10 p-3 rounded-full">
-                    <MessageCircleIcon className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Pontos distribuídos</p>
-                    <p className="text-2xl font-bold">
-                      {establishment.pointsGiven}
-                    </p>
-                  </div>
-                  <div className="bg-primary/10 p-3 rounded-full">
-                    <RocketIcon className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">
-                      Recompensas resgatadas
-                    </p>
-                    <p className="text-2xl font-bold">
-                      {establishment.rewardsRedeemed}
-                    </p>
-                  </div>
-                  <div className="bg-primary/10 p-3 rounded-full">
-                    <GiftIcon className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Seu plano</p>
-                    <p className="text-2xl font-bold">{establishment.plan}</p>
-                  </div>
-                  <div className="bg-primary/10 p-3 rounded-full">
-                    <ZapIcon className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Funcionalidades principais */}
+                    {/* Funcionalidades principais */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-6">O que você pode fazer</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -247,6 +172,82 @@ export default function Home() {
               </Card>
             </div>
           </div>
+          {/* Header */}
+          <header className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Olá, {establishment.name}!
+            </h1>
+            <p className="text-gray-600">
+              Bem-vindo ao seu painel de fidelidade inteligente via WhatsApp
+            </p>
+
+          </header>
+
+          {/* Destaques */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <Card className="bg-white shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">Clientes</p>
+                    <p className="text-2xl font-bold">
+                      {establishment.clients}
+                    </p>
+                  </div>
+                  <div className="bg-primary/10 p-3 rounded-full">
+                    <MessageCircleIcon className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">Pontos distribuídos</p>
+                    <p className="text-2xl font-bold">
+                      {establishment.pointsGiven}
+                    </p>
+                  </div>
+                  <div className="bg-primary/10 p-3 rounded-full">
+                    <RocketIcon className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Recompensas resgatadas
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {establishment.rewardsRedeemed}
+                    </p>
+                  </div>
+                  <div className="bg-primary/10 p-3 rounded-full">
+                    <GiftIcon className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">Seu plano</p>
+                    <p className="text-2xl font-bold">{establishment.plan}</p>
+                  </div>
+                  <div className="bg-primary/10 p-3 rounded-full">
+                    <ZapIcon className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+
         </div>
       </div>
   );
